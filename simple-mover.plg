@@ -1,0 +1,137 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "simple-mover">
+<!ENTITY author    "alturismo">
+<!ENTITY version   "2025.01.11">
+<!ENTITY launch    "Settings/simple-mover">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/alturismo/unraid-simple-mover/master">
+<!ENTITY pluginURL "&gitURL;/&name;.plg">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+<!ENTITY plgNAME   "&name;-&version;-x86_64">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+<!ENTITY packages  "/boot/config/plugins/&name;/packages">
+]>
+<PLUGIN name="&name;" 
+        author="&author;" 
+        version="&version;" 
+        launch="&launch;" 
+        pluginURL="&pluginURL;" 
+        min="6.12.13"
+        support="https://forums.unraid.net/topic/181843-support-alturismo-repos/">
+ 
+<CHANGES>
+ ###2025.01.11
+  - simple mover addon, mainly considered for Media Files to keep on cache
+  - NO replacement for regular mover or mover tuning, actually mover tuning is mandatory for exclusion
+
+</CHANGES>
+
+<FILE Name="&emhttp;/README.md">
+ <INLINE>
+  **Simple Mover**
+
+  - simple mover addon, mainly considered for Media Files to keep on cache
+  - NO replacement for regular mover or mover tuning, actually mover tuning is mandatory for exclusion
+ </INLINE>
+</FILE>
+
+<FILE Name="&plgPATH;/&plgNAME;.txz" Run="upgradepkg --install-new">
+<URL>&gitURL;/packages/&name;.txz</URL>
+</FILE>
+
+<FILE Run="/bin/bash">
+ <INLINE>
+
+  echo "Checking executable flags..."
+
+  if [ -f /usr/local/emhttp/plugins/simple-mover/scripts/none ]; then
+    if [ ! -x /usr/local/emhttp/plugins/simple-mover/scripts/none ]; then
+        chmod +x /usr/local/emhttp/plugins/simple-mover/scripts/*
+        echo "scripts are executable."
+    else
+        echo "scripts where already executable."
+    fi
+  else
+    echo "script doesn't exist."
+  fi
+  
+  mkdir -p /usr/local/emhttp/plugins/simple-mover/lists/
+  touch /usr/local/emhttp/plugins/simple-mover/lists/simple_mover_log.txt
+  touch /usr/local/emhttp/plugins/simple-mover/lists/simple_mover_I_log.txt
+
+ </INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+ <INLINE>
+
+  echo "+=============================================================================="
+  echo "| default configuration if not existend"
+
+  def_settingsfile="/usr/local/emhttp/plugins/simple-mover/default_simplemoversettings"
+  settingsfile="/boot/config/plugins/simple-mover/simplemoversettings"
+
+  if test -f "$settingsfile"; then
+    echo "| $FILE already there"
+  else
+    cp $def_settingsfile $settingsfile
+	echo "| copy default $FILE"
+  fi
+  echo "+=============================================================================="
+
+  echo "+=============================================================================="
+  echo "| Starting Actions and Cache Mover if crons where set ..."
+
+  touch /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i 's/^simple_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i 's/^simple_I_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i '/^$/d' /boot/config/plugins/simple-mover/simplemoversettings
+
+  echo 'simple_cron_state=""' >> /boot/config/plugins/simple-mover/simplemoversettings
+  echo 'simple_I_cron_state=""' >> /boot/config/plugins/simple-mover/simplemoversettings
+
+  /usr/local/emhttp/plugins/simple-mover/scripts/simple_cron.sh
+  /usr/local/emhttp/plugins/simple-mover/scripts/simple_I_cron.sh
+
+  if [ ! -z "$(crontab -l | grep -i Simple_Mover)" ]; then
+    echo "| cronjob for Simple Mover started"
+	sed -i 's/^simple_cron_state=.*/simple_cron_state="started"/' /boot/config/plugins/simple-mover/simplemoversettings
+  else
+    echo "| cron for Cache Mover not started"
+	sed -i 's/^simple_cron_state=.*/simple_cron_state="stopped"/' /boot/config/plugins/simple-mover/simplemoversettings
+  fi
+
+  if [ ! -z "$(crontab -l | grep -i Simple_Basic_Mover)" ]; then
+    echo "| cronjob for Simple Basic Mover started"
+	sed -i 's/^simple_I_cron_state=.*/simple_I_cron_state="started"/' /boot/config/plugins/simple-mover/simplemoversettings
+  else
+    echo "| cron for Simple Basic Mover not started"
+	sed -i 's/^simple_I_cron_state=.*/simple_I_cron_state="stopped"/' /boot/config/plugins/simple-mover/simplemoversettings
+  fi
+  echo "+=============================================================================="
+
+
+ </INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+rm -f $(ls &plgPATH;/&name;*.txz 2>/dev/null|grep -v '&version;')
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+ <INLINE>
+  echo "Removing &name;..."
+  echo "can take a while as python3 is ..."
+  removepkg &plgPATH;/*.txz  1> /dev/null
+  rm -rf &plgPATH;
+  rm -rf &emhttp;
+  sed -i 's/^simple_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i 's/^simple_I_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i '/^$/d' /boot/config/plugins/simple-mover/simplemoversettings
+  echo "&name; has been removed"
+ </INLINE>
+</FILE>
+
+</PLUGIN>

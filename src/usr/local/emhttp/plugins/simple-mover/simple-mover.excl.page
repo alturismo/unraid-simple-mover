@@ -1,0 +1,45 @@
+Menu="simple-mover:3"
+Title="SIMPLE MOVER EXCLUSIONS"
+Tag="icon-disk"
+---
+
+<?php
+$simplemoversettings            = parse_ini_file("/boot/config/plugins/simple-mover/simplemoversettings",true);
+$simplemoversettings_move_excl_list        = isset($simplemoversettings['simple_mover_exl']) ? $simplemoversettings['simple_mover_exl'] : "";
+$simplemoversettings_move_excl_list_I        = isset($simplemoversettings['simple_mover_exl_I']) ? $simplemoversettings['simple_mover_exl_I'] : "";
+$simplemoversettings_move_tune_list        = isset($simplemoversettings['mover_tuning_excl']) ? $simplemoversettings['mover_tuning_excl'] : "";
+$simplemoversettings_cache_mover_exl        = isset($simplemoversettings['cache_mover_exl']) ? $simplemoversettings['cache_mover_exl'] : "";
+?>
+
+<?
+$file1 = "$simplemoversettings_move_excl_list";
+$text1 = @file_get_contents($file1) ?: '';
+$text1 = preg_replace(["/\r\n/","/\r/"],"\n",$text1);
+$file2 = "$simplemoversettings_move_excl_list_I";
+$text2 = @file_get_contents($file2) ?: '';
+$text2 = preg_replace(["/\r\n/","/\r/"],"\n",$text2);
+$file3 = "$simplemoversettings_cache_mover_exl";
+$text3 = @file_get_contents($file3) ?: '';
+$text3 = preg_replace(["/\r\n/","/\r/"],"\n",$text3);
+$file4 = "$simplemoversettings_move_tune_list";
+$text4 = @file_get_contents($file4) ?: '';
+$text4 = preg_replace(["/\r\n/","/\r/"],"\n",$text4);
+?>
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Mover Tuning - Exluded</span></div>
+<div style='border: 1px solid red; height:300px; overflow:auto;'>
+<textarea spellcheck="false" cols="120" rows="<?=substr_count($text4,"\n")+1?>" maxlength="512" name="text4" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text4)?></textarea></div>
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover - Excluded</span></div>
+<div style='border: 1px solid red; height:150px; overflow:auto;'>
+<textarea spellcheck="false" cols="120" rows="<?=substr_count($text1,"\n")+1?>" maxlength="512" name="text1" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text1)?></textarea></div>
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Basic - Excluded</span></div>
+<div style='border: 1px solid red; height:150px; overflow:auto;'>
+<textarea spellcheck="false" cols="120" rows="<?=substr_count($text2,"\n")+1?>" maxlength="512" name="text2" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text2)?></textarea></div>
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Cache Mover - Excluded</span></div>
+<div style='border: 1px solid red; height:150px; overflow:auto;'>
+<textarea spellcheck="false" cols="120" rows="<?=substr_count($text3,"\n")+1?>" maxlength="512" name="text3" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text3)?></textarea></div>
+
+</form>

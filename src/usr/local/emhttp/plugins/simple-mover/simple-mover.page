@@ -1,0 +1,226 @@
+Menu="Utilities"
+Type="xmenu"
+Title="SIMPLE-MOVER"
+Icon="simple-mover.png"
+Tag="icon-disk"
+Tabs="true"
+---
+<?php
+$simplemoversettings            = parse_ini_file("/boot/config/plugins/simple-mover/simplemoversettings",true);
+// Simple Mover
+$simplemoversettings_pool_disks        = isset($simplemoversettings['pool_disks']) ? $simplemoversettings['pool_disks'] : "";
+$simplemoversettings_pool_folders        = isset($simplemoversettings['pool_folders']) ? $simplemoversettings['pool_folders'] : "";
+$simplemoversettings_move_target        = isset($simplemoversettings['move_target']) ? $simplemoversettings['move_target'] : "";
+$simplemoversettings_max_used        = isset($simplemoversettings['max_used']) ? $simplemoversettings['max_used'] : "";
+$simplemoversettings_min_free        = isset($simplemoversettings['min_free']) ? $simplemoversettings['min_free'] : "";
+$simplemoversettings_use_prio       = isset($simplemoversettings['use_prio']) ? $simplemoversettings['use_prio'] : "";
+$simplemoversettings_min_age        = isset($simplemoversettings['min_age']) ? $simplemoversettings['min_age'] : "";
+$simplemoversettings_simple_mover_exl        = isset($simplemoversettings['simple_mover_exl']) ? $simplemoversettings['simple_mover_exl'] : "";
+$simplemoversettings_rsync_simple        = isset($simplemoversettings['rsync_simple']) ? $simplemoversettings['rsync_simple'] : "";
+// Simple Mover I
+$simplemoversettings_pool_disks_I        = isset($simplemoversettings['pool_disks_I']) ? $simplemoversettings['pool_disks_I'] : "";
+$simplemoversettings_pool_folders_I        = isset($simplemoversettings['pool_folders_I']) ? $simplemoversettings['pool_folders_I'] : "";
+$simplemoversettings_move_target_I        = isset($simplemoversettings['move_target_I']) ? $simplemoversettings['move_target_I'] : "";
+$simplemoversettings_min_age_I       = isset($simplemoversettings['min_age_I']) ? $simplemoversettings['min_age_I'] : "";
+$simplemoversettings_simple_mover_exl_I       = isset($simplemoversettings['simple_mover_exl_I']) ? $simplemoversettings['simple_mover_exl_I'] : "";
+$simplemoversettings_pre_simple_I        = isset($simplemoversettings['pre_simple_I']) ? $simplemoversettings['pre_simple_I'] : "";
+$simplemoversettings_post_simple_I        = isset($simplemoversettings['post_simple_I']) ? $simplemoversettings['post_simple_I'] : "";
+$simplemoversettings_rsync_simple_I        = isset($simplemoversettings['rsync_simple_I']) ? $simplemoversettings['rsync_simple_I'] : "";
+// Exclusion Lists
+$simplemoversettings_cache_mover_exl        = isset($simplemoversettings['cache_mover_exl']) ? $simplemoversettings['cache_mover_exl'] : "";
+$simplemoversettings_mover_tuning_excl        = isset($simplemoversettings['mover_tuning_excl']) ? $simplemoversettings['mover_tuning_excl'] : "";
+// Log
+$simplemoversettings_unraid_syslog        = isset($simplemoversettings['unraid_syslog']) ? $simplemoversettings['unraid_syslog'] : "";
+$simplemoversettings_unraid_note        = isset($simplemoversettings['unraid_note']) ? $simplemoversettings['unraid_note'] : "";
+shell_exec("/usr/local/emhttp/plugins/simple-mover/scripts/simple_logs.sh");
+// Cron
+$simplemoversettings_simple_cron_state       = isset($simplemoversettings['simple_cron_state']) ? $simplemoversettings['simple_cron_state'] : "";
+$simplemoversettings_simple_I_cron_state        = isset($simplemoversettings['simple_I_cron_state']) ? $simplemoversettings['simple_I_cron_state'] : "";
+$simplemoversettings_simple_cron_time        = isset($simplemoversettings['simple_cron_time']) ? $simplemoversettings['simple_cron_time'] : "";
+$simplemoversettings_simple_I_cron_time        = isset($simplemoversettings['simple_I_cron_time']) ? $simplemoversettings['simple_I_cron_time'] : "";
+?>
+
+
+<script>
+    function send(command) {
+        if(command == "simple_start"){
+            document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_cron.sh";
+        } else if( command == "simple_I_start" ){
+            document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_I_cron.sh";
+        }
+        document.getElementById("form").submit();
+    }
+</script>
+
+<form markdown="1" id="form" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" id="file" name="#file" value="/boot/config/plugins/simple-mover/simplemoversettings" />
+<input type="hidden" id="command" name="#command" value="" />
+
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Setup</span></div>
+
+pool disk:
+: <input type="text" name="pool_disks" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_disks;?>" placeholder="cache" >
+    <blockquote class='inline_help'>
+        <p>source pool disk to move to array</p>
+    </blockquote>
+
+subfolders from root Share on:
+: <input type="text" name="pool_folders" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_folders;?>" placeholder="Media/VCD" >
+    <blockquote class='inline_help'>
+        <p>source folders from root Share up to move to array</p>
+        <p>sample, Media/VCD Media/TVRIPS ...</p>
+    </blockquote>
+
+target:
+: <input type="text" name="move_target" class="narrow" maxlength="30" value="<?=$simplemoversettings_move_target;?>" placeholder="user0" >
+    <blockquote class='inline_help'>
+        <p>target, regular array user0</p>
+    </blockquote>
+
+min treehold to run:
+: <input type="text" name="max_used" class="narrow" maxlength="2" value="<?=$simplemoversettings_max_used;?>" placeholder="80" >
+    <blockquote class='inline_help'>
+        <p>percentage treehold when mover should move away, sample 80, ONLY move if pool is > 80% filled</p>
+        <p>as higher as longer keeping files on cache</p>
+    </blockquote>
+
+min free:
+: <input type="text" name="min_free" class="narrow" maxlength="3" value="<?=$simplemoversettings_min_free;?>" placeholder="50" >
+    <blockquote class='inline_help'>
+        <p>percentage treehold when mover should stop moving to keep files on cache</p>
+    </blockquote>
+
+priority age or size:
+: <input type="text" name="use_prio" class="narrow" maxlength="4" value="<?=$simplemoversettings_use_prio;?>" placeholder="age" >
+    <blockquote class='inline_help'>
+        <p>either age or size as order to move away ... oldest files first or largest folders first</p>
+    </blockquote>
+
+min age:
+: <input type="text" name="min_age" class="narrow" maxlength="3" value="<?=$simplemoversettings_min_age;?>" placeholder="30" >
+    <blockquote class='inline_help'>
+        <p>min age in days, all newer files will be ignored</p>
+    </blockquote>
+
+path to exclusion file:
+: <input type="text" name="simple_mover_exl" class="narrow" maxlength="99" value="<?=$simplemoversettings_simple_mover_exl;?>" placeholder="/mnt/user/system/mover/simple_mover_excl.txt" >
+    <blockquote class='inline_help'>
+        <p>path to exclusion file in terms needed</p>
+        <p>in terms a subfolder from configured folders should be excluded</p>
+    </blockquote>
+
+rsync command:
+: <input type="text" name="rsync_simple" class="narrow" maxlength="99" value="<?=$simplemoversettings_rsync_simple;?>" placeholder="rsync --dry-run -avzht --mkpath --remove-source-files --stats" >
+    <blockquote class='inline_help'>
+        <p>used rsync command, default --dry-run included to 1st look, check logs, ... remove --dry-run for real usage</p>
+    </blockquote>
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Setup - Basic</span></div>
+
+pool disk:
+: <input type="text" name="pool_disks_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_disks_I;?>" placeholder="cache" >
+    <blockquote class='inline_help'>
+        <p>source pool disk to move to array</p>
+    </blockquote>
+
+subfolders from root Share on:
+: <input type="text" name="pool_folders_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_folders_I;?>" placeholder="Media/VCD" >
+    <blockquote class='inline_help'>
+        <p>source folders from root Share up to move to array</p>
+        <p>sample, Media/VCD Media/TVRIPS ...</p>
+    </blockquote>
+
+target:
+: <input type="text" name="move_target_I" class="narrow" maxlength="30" value="<?=$simplemoversettings_move_target_I;?>" placeholder="user0" >
+    <blockquote class='inline_help'>
+        <p>target, regular array user0</p>
+    </blockquote>
+
+min age:
+: <input type="text" name="min_age_I" class="narrow" maxlength="3" value="<?=$simplemoversettings_min_age_I;?>" placeholder="30" >
+    <blockquote class='inline_help'>
+        <p>min age in days, all newer files will be ignored</p>
+    </blockquote>
+
+path to exclusion file:
+: <input type="text" name="simple_mover_exl_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_simple_mover_exl_I;?>" placeholder="/mnt/user/system/mover/simple_mover_excl_I.txt" >
+    <blockquote class='inline_help'>
+        <p>path to exclusion file in terms needed</p>
+        <p>in terms a subfolder from configured folders should be excluded</p>
+    </blockquote>
+
+pre run script:
+: <input type="text" name="pre_simple_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_pre_simple_I;?>" placeholder="/path/to/script/script.sh" >
+    <blockquote class='inline_help'>
+        <p>path to script to run before move</p>
+    </blockquote>
+
+post run script:
+: <input type="text" name="post_simple_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_post_simple_I;?>" placeholder="/path/to/script/script.sh" >
+    <blockquote class='inline_help'>
+        <p>path to script to run after move</p>
+    </blockquote>
+
+rsync command:
+: <input type="text" name="rsync_simple_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_rsync_simple_I;?>" placeholder="rsync --dry-run -avzht --mkpath --remove-source-files --stats" >
+    <blockquote class='inline_help'>
+        <p>used rsync command, default --dry-run included to 1st look, check logs, ... remove --dry-run for real usage</p>
+    </blockquote>
+
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover - Exclusions external Setup</span></div>
+
+path to cache mover exclusion file:
+: <input type="text" name="cache_mover_exl" class="narrow" maxlength="99" value="<?=$simplemoversettings_cache_mover_exl;?>" placeholder="/mnt/user/system/mover/mover_cache_excl.txt" >
+    <blockquote class='inline_help'>
+        <p>path to cache mover exclusion file in terms used</p>
+        <p>will keep in sync with cache mover so cache mover rules will be prefered for cached files</p>
+    </blockquote>
+
+path to mover tuning exclusion file:
+: <input type="text" name="mover_tuning_excl" class="narrow" maxlength="99" value="<?=$simplemoversettings_mover_tuning_excl;?>" placeholder="/mnt/user/system/mover/mover_tuning_excl.txt" >
+    <blockquote class='inline_help'>
+        <p>path to mover tuning exclusion, mandatory !!!</p>
+        <p>will keep in sync with mover tuning, so simple mover rules will run for this and keep ignored from mover</p>
+    </blockquote>
+
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Setup - Timers</span></div>
+
+Simple Mover Cron:
+: <input type="text" name="simple_cron_time" class="narrow" maxlength="31" value="<?=$simplemoversettings_simple_cron_time;?>" placeholder="10 */3 * * *" >
+<input type="button" value="Set Cron" onClick="send('simple_start')">
+<input type="button" value="<?php echo $simplemoversettings['simple_cron_state']; ?>"/>
+    <blockquote class='inline_help'>
+        <p>cron timer, running mover job with advanced rules</p>
+    </blockquote>
+
+Simple Mover Basic Cron:
+: <input type="text" name="simple_I_cron_time" class="narrow" maxlength="31" value="<?=$simplemoversettings_simple_I_cron_time;?>" placeholder="55 2 * * *" >
+<input type="button" value="Set Cron" onClick="send('simple_I_start')">
+<input type="button" value="<?php echo $simplemoversettings['simple_I_cron_state']; ?>"/>
+    <blockquote class='inline_help'>
+        <p>cron timer, running mover job with basic rule</p>
+    </blockquote>
+
+
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Log and Notifications Setup</span></div>
+
+syslog:
+: <input type="text" name="unraid_syslog" class="narrow" maxlength="3" value="<?=$simplemoversettings_unraid_syslog;?>" placeholder="yes" >
+    <blockquote class='inline_help'>
+        <p>type <yes> to activate syslog logging</p>
+    </blockquote>
+
+Unraid Notifications:
+: <input type="text" name="unraid_note" class="narrow" maxlength="3" value="<?=$simplemoversettings_unraid_note;?>" placeholder="yes" >
+    <blockquote class='inline_help'>
+        <p>send Unraid notifys on events -open todo -</p>
+    </blockquote>
+
+<div style="text-align: center;">
+    <input type="button" value="Apply" onClick="send('apply')">
+</div>
+
+</form>
