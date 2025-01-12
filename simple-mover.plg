@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "simple-mover">
 <!ENTITY author    "alturismo">
-<!ENTITY version   "2025.01.11">
+<!ENTITY version   "2025.01.12">
 <!ENTITY launch    "Settings/simple-mover">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/alturismo/unraid-simple-mover/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -20,7 +20,8 @@
         support="https://forums.unraid.net/topic/181843-support-alturismo-repos/">
  
 <CHANGES>
- ###2025.01.11
+ ###2025.01.12
+  - small text corrections
   - simple mover addon, mainly considered for Media Files to keep on cache
   - NO replacement for regular mover or mover tuning, actually mover tuning is mandatory for exclusion
 

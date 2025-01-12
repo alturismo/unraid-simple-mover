@@ -68,7 +68,7 @@ pool disk:
 subfolders from root Share on:
 : <input type="text" name="pool_folders" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_folders;?>" placeholder="Media/VCD" >
     <blockquote class='inline_help'>
-        <p>source folders from root Share up to move to array</p>
+        <p>source folders from root Share up to move to array, space seperated</p>
         <p>sample, Media/VCD Media/TVRIPS ...</p>
     </blockquote>
 
@@ -127,8 +127,8 @@ pool disk:
 subfolders from root Share on:
 : <input type="text" name="pool_folders_I" class="narrow" maxlength="99" value="<?=$simplemoversettings_pool_folders_I;?>" placeholder="Media/VCD" >
     <blockquote class='inline_help'>
-        <p>source folders from root Share up to move to array</p>
-        <p>sample, Media/VCD Media/TVRIPS ...</p>
+        <p>source folders from root Share up to move to array, space seperated</p>
+        <p>sample, Media/GAMES Media/BOOKS ...</p>
     </blockquote>
 
 target:

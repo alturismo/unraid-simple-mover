@@ -22,7 +22,7 @@ $text4 = preg_replace(["/\r\n/","/\r/"],"\n",$text4);
 <div style='border: 1px solid red; height:150px; overflow:auto;'>
 <textarea spellcheck="false" cols="200" rows="<?=substr_count($text1,"\n")+1?>" maxlength="512" name="text1" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text1)?></textarea></div>
 
-<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover - ignored</span></div>
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover - currently ignored</span></div>
 <div style='border: 1px solid red; height:150px; overflow:auto;'>
 <textarea spellcheck="false" cols="200" rows="<?=substr_count($text2,"\n")+1?>" maxlength="512" name="text2" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text2)?></textarea></div>
 
@@ -30,7 +30,7 @@ $text4 = preg_replace(["/\r\n/","/\r/"],"\n",$text4);
 <div style='border: 1px solid red; height:150px; overflow:auto;'>
 <textarea spellcheck="false" cols="200" rows="<?=substr_count($text3,"\n")+1?>" maxlength="512" name="text3" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text3)?></textarea></div>
 
-<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Basic - ignored</span></div>
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Simple Mover Basic - currently ignored</span></div>
 <div style='border: 1px solid red; height:300px; overflow:auto;'>
 <textarea spellcheck="false" cols="200" rows="<?=substr_count($text4,"\n")+1?>" maxlength="512" name="text4" style="resize:none;font-family:bitstream;width:100%" <?if ($var['fsState']=="Started"):?>disabled<?endif;?>><?=htmlspecialchars($text4)?></textarea></div>
 
