@@ -31,6 +31,7 @@ $simplemoversettings_cache_mover_exl        = isset($simplemoversettings['cache_
 $simplemoversettings_mover_tuning_excl        = isset($simplemoversettings['mover_tuning_excl']) ? $simplemoversettings['mover_tuning_excl'] : "";
 // Log
 $simplemoversettings_unraid_syslog        = isset($simplemoversettings['unraid_syslog']) ? $simplemoversettings['unraid_syslog'] : "";
+$simplemoversettings_unraid_mover        = isset($simplemoversettings['unraid_mover']) ? $simplemoversettings['unraid_mover'] : "";
 $simplemoversettings_unraid_note        = isset($simplemoversettings['unraid_note']) ? $simplemoversettings['unraid_note'] : "";
 shell_exec("/usr/local/emhttp/plugins/simple-mover/scripts/simple_logs.sh");
 // Cron
@@ -217,6 +218,12 @@ Unraid Notifications:
 : <input type="text" name="unraid_note" class="narrow" maxlength="3" value="<?=$simplemoversettings_unraid_note;?>" placeholder="yes" >
     <blockquote class='inline_help'>
         <p>send Unraid notifys on events -open todo -</p>
+    </blockquote>
+
+mover general:
+: <input type="text" name="unraid_mover" class="narrow" maxlength="3" value="<?=$simplemoversettings_unraid_mover;?>" placeholder="disable" >
+    <blockquote class='inline_help'>
+        <p>type <disable> to deactivate standard mover</p>
     </blockquote>
 
 <div style="text-align: center;">
