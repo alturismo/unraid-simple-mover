@@ -91,6 +91,10 @@ for pool_disk in $pool_disks
 		## build working list with age and size and sorted list
 		sed -i -r 's/ +/,/' $age_list
 		sed -i -r 's/ +/,/' $size_list
+		sed -i -r 's/\\//g' $age_list
+		sed -i -r 's/\\//g' $size_list
+		sed -i -r 's:/*$::' $age_list
+		sed -i -r 's:/*$::' $size_list
 		join -t',' --check-order -1 2 -2 2 <(sort -t',' -k 2 $age_list) <(sort -t',' -k 2 $size_list) > $age_size_list
 		if [[ $use_prio == "age" ]];then
 			echo "sorting order is age, oldest 1st"
@@ -189,7 +193,7 @@ for pool_disk in $pool_disks
 			pool_folder="${pool_folder#/}"
 			pool_folder="${pool_folder%/}"
 			$rsync_simple --exclude-from="$rsync_list" "/mnt/$pool_disk/$pool_folder/" "/mnt/$move_target/$pool_folder/"
-			find "/mnt/$pool_disk/$pool_folder/*" -type d -empty -delete  2> /dev/null
+			find /mnt/$pool_disk/$pool_folder/* -type d -empty -delete  2> /dev/null
 			done		
 	else
 		echo "/mnt/$pool_disk used ($pool_size%), min limit is ($max_used%), nothing todo"

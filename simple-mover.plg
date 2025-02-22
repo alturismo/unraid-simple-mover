@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "simple-mover">
 <!ENTITY author    "alturismo">
-<!ENTITY version   "2025.01.21">
+<!ENTITY version   "2025.02.22">
 <!ENTITY launch    "Settings/simple-mover">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/alturismo/unraid-simple-mover/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -20,6 +20,10 @@
         support="https://forums.unraid.net/topic/181843-support-alturismo-repos/">
  
 <CHANGES>
+ ###2025.02.22
+  - small bug fixes
+  - option to turn off standard mover to run as only mover option
+
  ###2025.01.21
   - small text corrections
   - simple mover addon, mainly considered for Media Files to keep on cache

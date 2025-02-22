@@ -83,6 +83,10 @@ for pool_disk in $pool_disks_I
 		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $age_list_I
 		sed -i -r 's/ +/,/' $age_list_I
 		sed -i -r 's/ +/,/' $size_list_I
+		sed -i -r 's/\\//g' $age_list_I
+		sed -i -r 's/\\//g' $size_list_I
+		sed -i -r 's:/*$::' $age_list_I
+		sed -i -r 's:/*$::' $size_list_I
 		join -t',' --check-order -1 2 -2 2 <(sort -t',' -k 2 $age_list_I) <(sort -t',' -k 2 $size_list_I) > $age_size_list_I
 		## calculate min_age to check when moving
 		min_age_now=$(date +%s)
@@ -131,7 +135,7 @@ for pool_disk in $pool_disks_I
 			echo "nothing to move, done here"
 		else
 			$rsync_simple_I --exclude-from="$rsync_list_I" "/mnt/$pool_disk/$pool_folder/" "/mnt/$move_target_I/$pool_folder/"
-			find "/mnt/$pool_disk/$pool_folder/*" -type d -empty -delete  2> /dev/null
+			find /mnt/$pool_disk/$pool_folder/* -type d -empty -delete  2> /dev/null
 		fi
 
 		done

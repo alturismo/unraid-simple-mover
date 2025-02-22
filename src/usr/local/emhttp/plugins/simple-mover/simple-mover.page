@@ -48,6 +48,8 @@ $simplemoversettings_simple_I_cron_time        = isset($simplemoversettings['sim
             document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_cron.sh";
         } else if( command == "simple_I_start" ){
             document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_I_cron.sh";
+        } else if( command == "mover_disable" ){
+            document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_disable.sh";
         }
         document.getElementById("form").submit();
     }
@@ -221,9 +223,10 @@ Unraid Notifications:
     </blockquote>
 
 mover general:
-: <input type="text" name="unraid_mover" class="narrow" maxlength="3" value="<?=$simplemoversettings_unraid_mover;?>" placeholder="disable" >
+: <input type="text" name="unraid_mover" class="narrow" maxlength="7" value="<?=$simplemoversettings_unraid_mover;?>" placeholder="disable" >
+<input type="button" value="DISABLE" onClick="send('mover_disable')">
     <blockquote class='inline_help'>
-        <p>type <disable> to deactivate standard mover</p>
+        <p>type <disable> to deactivate buildin standard mover, check logs after hitting DISABLE, will run autostart on reboot</p>
     </blockquote>
 
 <div style="text-align: center;">
