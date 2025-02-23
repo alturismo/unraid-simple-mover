@@ -50,6 +50,10 @@ $simplemoversettings_simple_I_cron_time        = isset($simplemoversettings['sim
             document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_I_cron.sh";
         } else if( command == "mover_disable" ){
             document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_disable.sh";
+        } else if( command == "simple_run_now" ){
+            document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_mover.sh";
+        } else if( command == "simple_I_run_now" ){
+            document.getElementById("command").value = "/usr/local/emhttp/plugins/simple-mover/scripts/simple_mover_I.sh";
         }
         document.getElementById("form").submit();
     }
@@ -184,7 +188,7 @@ path to cache mover exclusion file:
 path to mover tuning exclusion file:
 : <input type="text" name="mover_tuning_excl" class="narrow" maxlength="99" value="<?=$simplemoversettings_mover_tuning_excl;?>" placeholder="/mnt/user/system/mover/mover_tuning_excl.txt" >
     <blockquote class='inline_help'>
-        <p>path to mover tuning exclusion, mandatory !!!</p>
+        <p>path to mover tuning exclusion, mandatory !!! if Standard Mover is not disabled</p>
         <p>will keep in sync with mover tuning, so simple mover rules will run for this and keep ignored from mover</p>
     </blockquote>
 
@@ -195,18 +199,21 @@ Simple Mover Cron:
 : <input type="text" name="simple_cron_time" class="narrow" maxlength="31" value="<?=$simplemoversettings_simple_cron_time;?>" placeholder="10 */3 * * *" >
 <input type="button" value="Set Cron" onClick="send('simple_start')">
 <input type="button" value="<?php echo $simplemoversettings['simple_cron_state']; ?>"/>
+<input type="button" value="RUN NOW" onClick="send('simple_run_now')">
     <blockquote class='inline_help'>
         <p>cron timer, running mover job with advanced rules</p>
+        <p>Run Now, will run directly on button click following setup rules</p>
     </blockquote>
 
 Simple Mover Basic Cron:
 : <input type="text" name="simple_I_cron_time" class="narrow" maxlength="31" value="<?=$simplemoversettings_simple_I_cron_time;?>" placeholder="55 2 * * *" >
 <input type="button" value="Set Cron" onClick="send('simple_I_start')">
 <input type="button" value="<?php echo $simplemoversettings['simple_I_cron_state']; ?>"/>
+<input type="button" value="RUN NOW" onClick="send('simple_I_run_now')">
     <blockquote class='inline_help'>
         <p>cron timer, running mover job with basic rule</p>
+        <p>Run Now, will run directly on button click following setup rules</p>
     </blockquote>
-
 
 <div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Log and Notifications Setup</span></div>
 
@@ -222,7 +229,9 @@ Unraid Notifications:
         <p>send Unraid notifys on events -open todo -</p>
     </blockquote>
 
-mover general:
+<div class="title"><span class="left"><i class="fa fa-hand-peace-o title"></i>Standard Mover Setup</span></div>
+
+Mover general:
 : <input type="text" name="unraid_mover" class="narrow" maxlength="7" value="<?=$simplemoversettings_unraid_mover;?>" placeholder="disable" >
 <input type="button" value="DISABLE" onClick="send('mover_disable')">
     <blockquote class='inline_help'>

@@ -38,6 +38,3 @@ else
 fi
 
 exit;
-
-##	sed -i "2i exit;  ### stopper here from simple_mover" /usr/local/sbin/mover
-##	sed -i "/simple_mover/d" /usr/local/sbin/mover

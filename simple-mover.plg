@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "simple-mover">
 <!ENTITY author    "alturismo">
-<!ENTITY version   "2025.02.22">
+<!ENTITY version   "2025.02.23">
 <!ENTITY launch    "Settings/simple-mover">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/alturismo/unraid-simple-mover/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -20,6 +20,10 @@
         support="https://forums.unraid.net/topic/181843-support-alturismo-repos/">
  
 <CHANGES>
+ ###2025.02.23
+  - small bug fixes, typo and reenable standard mover on uninstall without reboot
+  - optionally run now manually button
+
  ###2025.02.22
   - small bug fixes
   - option to turn off standard mover to run as only mover option
@@ -85,7 +89,7 @@
   echo "+=============================================================================="
 
   echo "+=============================================================================="
-  echo "| Starting Actions and Cache Mover if crons where set ..."
+  echo "| Starting Actions and Simple Mover if crons where set ..."
 
   touch /boot/config/plugins/simple-mover/simplemoversettings
   sed -i 's/^simple_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
@@ -102,7 +106,7 @@
     echo "| cronjob for Simple Mover started"
 	sed -i 's/^simple_cron_state=.*/simple_cron_state="started"/' /boot/config/plugins/simple-mover/simplemoversettings
   else
-    echo "| cron for Cache Mover not started"
+    echo "| cron for Simple Mover not started"
 	sed -i 's/^simple_cron_state=.*/simple_cron_state="stopped"/' /boot/config/plugins/simple-mover/simplemoversettings
   fi
 
@@ -115,6 +119,7 @@
   fi
   echo "+=============================================================================="
 
+  /usr/local/emhttp/plugins/simple-mover/scripts/simple_disable.sh
 
  </INLINE>
 </FILE>
@@ -128,13 +133,13 @@ rm -f $(ls &plgPATH;/&name;*.txz 2>/dev/null|grep -v '&version;')
 <FILE Run="/bin/bash" Method="remove">
  <INLINE>
   echo "Removing &name;..."
-  echo "can take a while as python3 is ..."
   removepkg &plgPATH;/*.txz  1> /dev/null
   rm -rf &plgPATH;
   rm -rf &emhttp;
   sed -i 's/^simple_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
   sed -i 's/^simple_I_cron_state=.*//' /boot/config/plugins/simple-mover/simplemoversettings
   sed -i '/^$/d' /boot/config/plugins/simple-mover/simplemoversettings
+  sed -i "/simple_mover/d" /usr/local/sbin/mover
   echo "&name; has been removed"
  </INLINE>
 </FILE>
