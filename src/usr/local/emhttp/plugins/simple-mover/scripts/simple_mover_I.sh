@@ -104,8 +104,7 @@ for pool_disk in $pool_disks_I
 				echo "$move_name" >> $no_mover_list_I
 			elif [[ "$move_age" -lt "$min_age_date" ]]; then
 				echo "$move_name" >> $mover_list_I
-				total_move_size+=" $move_size"
-				total_move_size=$(dc <<< '[+]sa[z2!>az2!>b]sb'"${total_move_size[*]}lbxp")
+				total_move_size=$((total_move_size+$move_size))  
 			else
 				echo "$move_name" >> $no_mover_list_I
 			fi

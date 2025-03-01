@@ -50,6 +50,7 @@ sum_excl_list="$simple_mover_list_path/mover_sum_excl_list.txt"
 sum_excl_src="$simple_mover_exl $cache_mover_exl"
 
 total_move_size="0"
+
 rm $mover_list 2> /dev/null
 rm $no_mover_list 2> /dev/null
 rm $sum_excl_list 2> /dev/null
@@ -79,8 +80,12 @@ for pool_disk in $pool_disks
 		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $age_list
 		### calculate total_kb_size to free, single files in Share
 		files_kb+=$(ls -la /mnt/$pool_disk/$pool_folder 2> /dev/null | grep ^- | awk '{print $5}' | awk -F '=' '$1 > 1000 {print $0}')
+		# files_kb_size=$(dc <<< '[+]sa[z2!>az2!>b]sb'"${files_kb[*]}lbxp")	## old version in following if loop
 		if [ ! -z "$files_kb" ];then
-			files_kb_size=$(dc <<< '[+]sa[z2!>az2!>b]sb'"${files_kb[*]}lbxp")
+			for i in ${files_kb[@]};
+			do
+				files_kb_size=$((files_kb_size+i))  
+				done
 		fi
 		done
 		## sort folders for size and age in sep lists to showoff only
@@ -141,8 +146,7 @@ for pool_disk in $pool_disks
 				echo "$move_name" >> $no_mover_list
 			elif [[ "$total_move_size" -lt "$total_kb_size" ]] && [[ "$move_age" -lt "$min_age_date" ]]; then
 				echo "$move_name" >> $mover_list
-				total_move_size+=" $move_size"
-				total_move_size=$(dc <<< '[+]sa[z2!>az2!>b]sb'"${total_move_size[*]}lbxp")
+				total_move_size=$((total_move_size+$move_size))  
 			else
 				echo "$move_name" >> $no_mover_list
 			fi
@@ -151,7 +155,6 @@ for pool_disk in $pool_disks
 		total_move_size=$(echo $total_move_size | numfmt --from-unit=1024 --to=iec --format="%.0f")
 		echo "$total_move_size in queue to move when limits are reached, min $max_used% fillrate on $pool_disk"
 		echo "min. $min_age days old to reach $min_free% treehold on $pool_disk"
-
 		### merge exlusion lists for rsync, cache mover plugin, mover tuning plugin, simple mover plugin
 		mover_source_files="$no_mover_list $simple_mover_exl $cache_mover_exl"
 		for mover_line in $mover_source_files
@@ -168,7 +171,6 @@ for pool_disk in $pool_disks
 			pool_folder="${pool_folder%/}"
 			sed -i -e "s|/mnt/$pool_disk/$pool_folder||g" $rsync_list
 			done
-
 	done
 
 ### update mover ignore list ###
