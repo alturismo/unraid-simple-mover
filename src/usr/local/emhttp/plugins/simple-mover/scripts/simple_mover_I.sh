@@ -79,10 +79,8 @@ for pool_disk in $pool_disks_I
 		pool_folder="${pool_folder#/}"
 		pool_folder="${pool_folder%/}"
 		## build working list with age and size
-		du -d 0 /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=1; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $size_list_I
-		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $age_list_I
-		sed -i -r 's/ +/,/' $age_list_I
-		sed -i -r 's/ +/,/' $size_list_I
+		du -d 0 /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=1; i<=NF; ++i) printf "%s ", $i; print ""}' | sed -r 's/ +/,/' | sed 's/[[:blank:]]*$//' >> $size_list_I
+		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed -r 's/ +/,/' | sed 's/[[:blank:]]*$//' >> $age_list_I
 		sed -i -r 's/\\//g' $age_list_I
 		sed -i -r 's/\\//g' $size_list_I
 		sed -i -r 's:/*$::' $age_list_I

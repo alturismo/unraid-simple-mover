@@ -76,8 +76,8 @@ for pool_disk in $pool_disks
 		do
 		pool_folder="${pool_folder#/}"
 		pool_folder="${pool_folder%/}"
-		du -d 0 /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=1; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $size_list
-		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed 's/[[:blank:]]*$//' >> $age_list
+		du -d 0 /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=1; i<=NF; ++i) printf "%s ", $i; print ""}' | sed -r 's/ +/,/' | sed 's/[[:blank:]]*$//' >> $size_list
+		ls -ond -T 1 --time-style=+%s /mnt/$pool_disk/$pool_folder/* 2> /dev/null | awk '{for(i=5; i<=NF; ++i) printf "%s ", $i; print ""}' | sed -r 's/ +/,/' | sed 's/[[:blank:]]*$//' >> $age_list
 		### calculate total_kb_size to free, single files in Share
 		files_kb+=$(ls -la /mnt/$pool_disk/$pool_folder 2> /dev/null | grep ^- | awk '{print $5}' | awk -F '=' '$1 > 1000 {print $0}')
 		# files_kb_size=$(dc <<< '[+]sa[z2!>az2!>b]sb'"${files_kb[*]}lbxp")	## old version in following if loop
@@ -94,8 +94,6 @@ for pool_disk in $pool_disks
 		sort -g -o $age_list{,}
 		awk '{ sub(/[0-9]{10}/, strftime("%Y-%m-%d %H:%M", substr($0,0,10))) }1' $age_list > $age_list_sorted
 		## build working list with age and size and sorted list
-		sed -i -r 's/ +/,/' $age_list
-		sed -i -r 's/ +/,/' $size_list
 		sed -i -r 's/\\//g' $age_list
 		sed -i -r 's/\\//g' $size_list
 		sed -i -r 's:/*$::' $age_list
